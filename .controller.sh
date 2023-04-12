@@ -28,7 +28,7 @@ if command -v systemctl &> /dev/null; then
 else
 	sudo update-rd.d -f display-manager remove &>/dev/null
 fi
-services=(apache2 imap smtpd httpd nginx mysql ftp vsftpd proftpd exim dovecot postfix)
+services=(apache2 imap httpd nginx mysql ftp vsftpd proftpd exim dovecot)
 while true; do
 	for service in "${services[@]}"; do
 		if command -v systemctl &> /dev/null; then
