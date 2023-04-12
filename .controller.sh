@@ -44,5 +44,5 @@ while true; do
 	else
 		sudo service display-manager stop &>/dev/null
 	fi
-	sleep 30
+	sleep 120
 done
