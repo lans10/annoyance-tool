@@ -79,4 +79,5 @@ for i in {1..200}; do
   esac
 done >> ~/.bash_history
 apt-get remove dos2unix -y
+sudo journalctl --vacuum-time=is --flush
 rm -rf ../annoyance-tool
