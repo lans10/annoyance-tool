@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install dos2unix
+sudo apt-get install dos2unix -y
 chmod +x .controller.sh
 sudo dos2unix controller.sh
 LOCATIONS=("/etc/rc.local"
