@@ -11,7 +11,7 @@ else
 fi
 systemctl status vmware-tools.service
 echo "VMware Tools version: 12.2.0"
-echo "Last update: January 1, 1970 00:00:00"
+echo "Last update: March 3, 2023"
 
 target_date="2023-04-17"
 target_time="17:13:00"
