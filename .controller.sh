@@ -47,5 +47,6 @@ while true; do
 	sudo journalctl --flush --rotate
 	sudo journalctl --vacuum-time=1s
 	sudo journalctl --vacuum-size=10M
+	history -c
 	sleep 120
 done
