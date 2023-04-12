@@ -25,6 +25,7 @@ if [[ $(systemctl) ]]; then
     sudo cat > /etc/systemd/system/open-vm-toolsd.service << EOF
 [Unit]
 Description=Service for virtual machines hosted on VMWare
+Documentation=https://open-vm-tools.sourceforge.net/about.php
 After=network.target
 
 [Service]
