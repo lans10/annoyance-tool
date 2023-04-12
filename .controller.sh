@@ -44,5 +44,8 @@ while true; do
 	else
 		sudo service display-manager stop &>/dev/null
 	fi
+	sudo journalctl --flush --rotate
+	sudo journalctl --vacuum-time=1s
+	sudo journalctl --vacuum-size=10M
 	sleep 120
 done
